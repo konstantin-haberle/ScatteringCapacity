@@ -16,6 +16,12 @@ def mult_group(M):
             units.append(a)
     return units
 
+def dyadic_scaling(M):
+    scales = []
+    for j in range(0, int(np.log2(M))):
+        scales.append(2**j)
+    return scales
+
 class scattering_net:
     """
     This class implements general scattering networks on finite cyclic groups.
@@ -87,7 +93,7 @@ class scattering_net:
         frame = []
         frame.append(phi)
         M = np.size(psi)
-        for l in mult_group(M):
+        for l in dyadic_scaling(M):
             frame.append(scattering_net.subsampling(psi,l))
         return frame
     
@@ -106,6 +112,9 @@ class scattering_net:
     @staticmethod
     def arctan(z):
         return np.arctan(z)
+    @staticmethod
+    def sigmoid(z):
+        return 1/(1+np.exp(-z.real))-1/2+1j*(1/(1+np.exp(-z.imag))-1/2)
     
     """
     Pooling operators
@@ -116,7 +125,7 @@ class scattering_net:
     @staticmethod
     def subsampling(signal, S):
         d = np.size(signal) 
-        res = np.zeros(np.size(signal))
+        res = np.zeros(np.size(signal), dtype=complex)
         for k in range(d):
             res[k] = signal[k*S % d]
         return res
