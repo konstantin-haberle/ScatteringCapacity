@@ -16,10 +16,10 @@ def mult_group(M):
             units.append(a)
     return units
 
-def dyadic_scaling(M):
+def dyadic_scaling(M, J):
     scales = []
-    for j in range(0, int(np.log2(M))):
-        scales.append(2**j)
+    for j in range(0, J):
+        scales.append(2**j % M)
     return scales
 
 class scattering_net:
@@ -83,7 +83,7 @@ class scattering_net:
             frame.append(g)
         return frame
     
-    def wavelet_frame(phi,psi):
+    def wavelet_frame(phi,psi,J):
         """
         Wavelet frame for C^M
         phi (np.array): father wavelet 
@@ -93,7 +93,7 @@ class scattering_net:
         frame = []
         frame.append(phi)
         M = np.size(psi)
-        for l in dyadic_scaling(M):
+        for l in dyadic_scaling(M,J):
             frame.append(scattering_net.subsampling(psi,l))
         return frame
     
@@ -110,11 +110,11 @@ class scattering_net:
     def relu(z):
         return np.maximum(0,z.real)+1j*np.maximum(0,z.imag)
     @staticmethod
-    def arctan(z):
-        return np.arctan(z)
+    def tanh(z):
+        return np.tanh(z.real)+1j*np.tanh(z.imag)
     @staticmethod
     def sigmoid(z):
-        return 1/(1+np.exp(-z.real))-1/2+1j*(1/(1+np.exp(-z.imag))-1/2)
+        return (1/(1+np.exp(-z.real))-1/2)+1j*(1/(1+np.exp(-z.imag))-1/2)
     
     """
     Pooling operators
