@@ -107,10 +107,13 @@ class scattering_net:
     def modulus2(z):
         return np.abs(z)**2
     @staticmethod
+    def tanh(z):
+        return np.tanh(z)
+    @staticmethod
     def relu(z):
         return np.maximum(0,z.real)+1j*np.maximum(0,z.imag)
     @staticmethod
-    def tanh(z):
+    def tanh_split(z):
         return np.tanh(z.real)+1j*np.tanh(z.imag)
     @staticmethod
     def sigmoid(z):
